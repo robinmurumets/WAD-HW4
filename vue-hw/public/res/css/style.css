@@ -1,0 +1,262 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    margin: 0;
+    background-color: black;
+}
+
+header, footer {
+    width: 100%;
+    text-align: center;
+    background-color: #1d1d1d;
+    padding: 0;
+    font-size: 1.2em;
+}
+p {
+    color: rgb(202, 202, 202);
+}
+
+nav {
+    width: 99%;
+    background-color: rgb(37, 37, 37);     
+    padding-top: .5em;
+    padding-bottom: .5em;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;       
+    border-radius: 15px; /* to make corners round like in example*/
+    margin: .5em .5%; /* a small gap from the top and sides of page*/
+    
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+}
+
+nav a { /* descendant Selector */
+    padding: 20px 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    display: block;
+}
+
+nav a:hover { /* pseudo class usage */
+    transform: scale(.9);
+    border-radius: 20px;
+    background-color: #131313;
+}
+nav > div { /* usage of child selector */
+    padding-right: 1em;
+}
+
+.feed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.post {
+    background-color: #1d1d1d;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    width: 40%;
+}
+
+/* login.html styling*/
+.login-box {
+    margin: 20vh auto;
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: gray;
+    border-radius: 15px; 
+    padding: 2em;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.login-box h2, .login-box p {
+    color:crimson;
+}
+
+
+#login-button input { /*using id here*/
+    background-color: cornflowerblue;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 1em 1em;
+}
+.post-header {
+    display: flex;
+    align-items: center;
+}
+
+.post-header p {
+    font-size: 1em;
+}
+
+.post-header img {
+    border-radius: 50%;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.post-date {
+    font-size: 0.9em;
+    color: #666;
+    display: block;
+}
+
+.post-image {
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.post-text {
+    margin-top: 10px;
+    font-size: 1.1em;
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+.like-button:hover {
+    transform: scale(1.3);
+}
+
+/* addPost section --------------------------------------------------- */
+
+.addPost-box {
+    margin: 20vh auto;
+    width: 33%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    background-color: gray;
+    border-radius: 15px;
+    padding: 2em;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.addPost-box div ~ button {
+    background-color: navy;
+    border: none;
+    color: white;
+    padding: 1vh 1vh;
+    text-align: center;
+    cursor: pointer;
+    font-size: 3vh;
+}
+
+.addPost-postBody {
+    display: flex;
+    flex-direction: row;
+    padding: 4vh;
+}
+
+.addPost-postBody p {
+    color: white;
+    display: flex;
+    font-size: 3vh;
+}
+
+.addPost-selectFile {
+    display: flex;
+    flex-direction: row;
+    padding: 4vh;
+}
+
+.addPost-selectFile p {
+    color: white;
+    vertical-align: middle;
+    margin-bottom: 0;
+    font-size: 3vh;
+    margin: 3vh;
+}
+
+.addPost-postBody textarea {
+    width: 100%;
+    height: 150px;
+    border: solid 1px darkgray;
+    padding: 1vh 1vh;
+    font-size: 3vh;
+}
+
+.addPost-selectFile p + button {
+    background-color: darkgray;
+    border: solid 1px black;
+    color: white;
+    padding: 1vh 1vh;
+    text-align: center;
+    cursor: pointer;
+    font-size: 3vh;
+}
+
+.dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #666666;
+    text-align: left;
+    border-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.dropdown p {
+    color: white;
+}
+
+.show {
+    display:block;
+}
+
+/* --------------------------------------------------------------------------------- */
+
+@media(min-width: 1800px){ /* for really large screens */
+    .login-box{
+        width: 20%;
+    }
+}
+@media (max-width: 1800px) {
+    .post, .login-box , .addPost-box{
+        width: 50%;
+    }
+
+}
+
+@media (max-width: 1400px) {
+    .post, .login-box , .addPost-box{
+        width: 60%;
+    }
+}
+
+@media (max-width: 800px) {
+    .post, .login-box , .addPost-box{
+        width: 90%;
+    }
+}
+
+

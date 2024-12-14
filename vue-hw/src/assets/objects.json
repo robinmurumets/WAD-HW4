@@ -1,0 +1,82 @@
+[
+  {
+      "author": "Janek Jürgen",
+      "username": "@PhotographyJanek",
+      "profileImage": "res/images/user1.jpg",
+      "postImage": "res/images/tartu2024.jpg",
+      "text": "Tartu 2022",
+      "date": "Oct 22, 2024"
+  },
+  {
+      "author": "Lisette Marii",
+      "username": "@MariiLisette",
+      "profileImage": "res/images/user2.png",
+      "postImage": "",
+      "text": "Anyone knows in which room is the lab today?",
+      "date": "Oct 6, 2024"
+  },
+  {
+      "author": "Kristofer",
+      "username": "@Kristoffer",
+      "profileImage": "res/images/user3.jpg",
+      "postImage": "",
+      "text": "🌟 Excited to share my latest project! Been working hard on this, and it's finally live. Check it out! #coding #webdevelopment 🚀",
+      "date": "Oct 5, 2024"
+  },
+  {
+      "author": "Olavi",
+      "username": "@olavim",
+      "profileImage": "res/images/Default_Profile.png",
+      "postImage": "",
+      "text": "Time is the one thing we cannot grasp, yet it holds us all in its invisible hands...",
+      "date": "Oct 4, 2024"
+  },
+  {
+      "author": "Elon Musk",
+      "username": "@elonmusk",
+      "profileImage": "res/images/user4.jpg",
+      "postImage": "res/images/elon_post.jpg",
+      "text": "This is better than X",
+      "date": "Oct 3, 2024"
+  },
+  {
+      "author": "Anna Kaarina",
+      "username": "@ArtByAnna",
+      "profileImage": "res/images/user5.jpg",
+      "postImage": "res/images/art_post.jpg",
+      "text": "Finished my latest painting. Let me know what you think! 🎨",
+      "date": "Sep 30, 2024"
+  },
+  {
+      "author": "Markus",
+      "username": "@Markus_Life",
+      "profileImage": "res/images/user6.jpg",
+      "postImage": "",
+      "text": "Life update: starting a new job next week. Excited and nervous! #newbeginnings",
+      "date": "Sep 28, 2024"
+  },
+  {
+      "author": "Leila Noor",
+      "username": "@LeilaNoor",
+      "profileImage": "res/images/user7.jpg",
+      "postImage": "res/images/travel_post.jpg",
+      "text": "Exploring the beauty of nature 🌄",
+      "date": "Sep 27, 2024"
+  },
+  {
+      "author": "Matti Põder",
+      "username": "@mattip",
+      "profileImage": "res/images/user8.jpg",
+      "postImage": "",
+      "text": "Remember to stay hydrated 💧",
+      "date": "Sep 25, 2024"
+  },
+  {
+      "author": "Liisa",
+      "username": "@liisa_travels",
+      "profileImage": "res/images/user9.jpg",
+      "postImage": "res/images/beach_post.jpg",
+      "text": "Relaxing on the beach 🌊☀️",
+      "date": "Sep 23, 2024"
+  }
+]
