@@ -3,8 +3,7 @@
         <Header />
         <div v-if="post" class="post-details">
             <div class="post-info">
-                <p>{{ post.author }}</p>
-                <p>{{ post.username }}</p>
+                <p>{{ post.user }}</p>
                 <p>{{ post.body }}</p>
                 <textarea v-if="isEditing" v-model="editedText" class="edit-text"></textarea>
             </div>

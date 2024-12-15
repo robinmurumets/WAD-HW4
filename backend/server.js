@@ -105,11 +105,9 @@ app.get('/api/posts', authMiddleware, async (req, res) => {
         const result = await pool.query(`
             SELECT 
                 id,
-                author,
-                username,
+                user_id,
                 body,
-                likes,
-                post_date as created_at
+                created_at as post_date
             FROM posts 
             ORDER BY post_date DESC
         `);
@@ -125,13 +123,11 @@ app.get('/api/posts/:id', authMiddleware, async (req, res) => {
     try {
         const { id } = req.params;
         const result = await pool.query(
-            `SELECT 
-                id,
-                author,
-                username,
-                body,
-                likes,
-                post_date as created_at
+            `SELECT
+                 id,
+                 user_id,
+                 body,
+                 created_at as post_date
             FROM posts 
             WHERE id = $1`,
             [id]
@@ -147,16 +143,18 @@ app.get('/api/posts/:id', authMiddleware, async (req, res) => {
 
 app.post('/api/posts', authMiddleware, async (req, res) => {
     try {
-        const { author, username, body } = req.body;
+        const { user_id, body } = req.body; // Accept only user_id and body
         const result = await pool.query(
-            'INSERT INTO posts (author, username, body, likes, post_date) VALUES ($1, $2, $3, 0, NOW()) RETURNING *',
-            [author, username, body]
+            'INSERT INTO posts (user_id, body, created_at) VALUES ($1, $2, NOW()) RETURNING *',
+            [user_id, body] // Provide the required values
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {
+        console.error("Error creating post:", error);
         res.status(500).json({ error: "Could not create post" });
     }
 });
+
 
 
 app.put('/api/posts/:id', authMiddleware, async (req, res) => {

@@ -5,10 +5,9 @@
     
       <div class="post-info">
         <div class="author">
-          <p>{{ post.author }}</p>
-          <p>{{ post.username }}</p>
+          <p>{{ post.user }}</p>
         </div>
-        <p class="post-date">{{ post.date }}</p>
+        <p class="post-date">{{ post.post_date }}</p>
       </div>
     </div>
 

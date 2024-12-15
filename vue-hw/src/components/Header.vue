@@ -3,9 +3,9 @@
         <nav>
             <ul>
                 <li><router-link to="/">Home</router-link></li>
-                <li><router-link to="/addPost">Add Post</router-link></li>
-                <li v-if="!isAuthenticated"><router-link to="/contacts">Contact us</router-link></li>
-                <li v-if="!isAuthenticated"><router-link to="/signup">Sign up</router-link></li>
+                <li><router-link to="/add-post">Add Post</router-link></li>
+                <li><router-link to="/contacts">Contact us</router-link></li>
+                <li v-if="!isAuthenticated"><router-link to="/Login">Log In</router-link></li>
             </ul>
             <div v-if="isAuthenticated" class="profile-button">
                 <button type="button" @click="toggleDropdown">
