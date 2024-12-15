@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('./database');
+const pool = require('./db');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
@@ -11,31 +11,26 @@ const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:8080', credentials: true }));
-// We need to include "credentials: true" to allow cookies to be represented  
-// Also "credentials: 'include'" need to be added in Fetch API in the Vue.js App
-
-app.use(express.json()); // Parses incoming requests with JSON payloads and is based on body-parser.
-app.use(cookieParser()); // Parse Cookie header and populate req.cookies with an object keyed by the cookie names.
+app.use(express.json());
+app.use(cookieParser());
 
 const secret = "3f9e6b12fedacbd173ab6b875dca0c884b3e9f7bb291593d88af3d93f4e3898e";
-const maxAge = 60 * 60; //unlike cookies, the expiresIn in jwt token is calculated by seconds not milliseconds
+const maxAge = 60 * 60;
 
 const generateJWT = (id) => {
     return jwt.sign({ id }, secret, { expiresIn: maxAge });
-    //jwt.sign(payload, secret, [options, callback]), and it returns the JWT as string
 }
 
 app.listen(port, () => {
     console.log("Server is listening to port " + port);
 });
 
-// is used to check whether a user is authinticated
 app.get('/auth/authenticate', async (req, res) => {
     console.log('authentication request has been arrived');
-    const token = req.cookies.jwt; // assign the token named jwt to the token const
-    let authenticated = false; // a user is not authenticated until proven the opposite
+    const token = req.cookies.jwt;
+    let authenticated = false;
     try {
-        if (token) { //checks if the token exists
+        if (token) {
             await jwt.verify(token, secret, (err) => {
                 if (err) {
                     console.log('token is not verified');
@@ -56,13 +51,14 @@ app.get('/auth/authenticate', async (req, res) => {
     }
 });
 
-// signup a user
 app.post('/auth/signup', async (req, res) => {
     try {
         console.log("a signup request has arrived");
         const { email, password } = req.body;
+        console.log(`Email: ${email}, Password: ${password}`);
         const salt = await bcrypt.genSalt(); 
         const bcryptPassword = await bcrypt.hash(password, salt);
+        console.log(`Hashed Password: ${bcryptPassword}`);
         const authUser = await pool.query(
             "INSERT INTO users(email, password) values ($1, $2) RETURNING*",
             [email, bcryptPassword]
@@ -99,19 +95,102 @@ app.post('/auth/login', async (req, res) => {
     }
 });
 
-//logout a user = deletes the jwt
 app.get('/auth/logout', (req, res) => {
     console.log('delete jwt request arrived');
     res.status(202).clearCookie('jwt').json({ "Msg": "cookie cleared" });
 });
 
-
-app.get('/posts', authMiddleware, async (req, res) => {
+app.get('/api/posts', authMiddleware, async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM posts ORDER BY created_at DESC');
+        const result = await pool.query(`
+            SELECT 
+                id,
+                author,
+                username,
+                body,
+                likes,
+                post_date as created_at
+            FROM posts 
+            ORDER BY post_date DESC
+        `);
+        console.log('Fetched posts:', result.rows);
         res.json(result.rows);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Could not fetch posts." });
+        console.error('Error fetching posts:', error);
+        res.status(500).json({ error: "Could not fetch posts" });
+    }
+});
+
+app.get('/api/posts/:id', authMiddleware, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            `SELECT 
+                id,
+                author,
+                username,
+                body,
+                likes,
+                post_date as created_at
+            FROM posts 
+            WHERE id = $1`,
+            [id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/posts', authMiddleware, async (req, res) => {
+    try {
+        const { author, username, body } = req.body;
+        const result = await pool.query(
+            'INSERT INTO posts (author, username, body, likes, post_date) VALUES ($1, $2, $3, 0, NOW()) RETURNING *',
+            [author, username, body]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: "Could not create post" });
+    }
+});
+
+
+app.put('/api/posts/:id', authMiddleware, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { body } = req.body;
+        const result = await pool.query(
+            'UPDATE posts SET body = $1 WHERE id = $2 RETURNING *',
+            [body, id]
+        );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Post not found" });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/posts/:id', authMiddleware, async (req, res) => {
+    try {
+        const { id } = req.params;
+        await pool.query('DELETE FROM posts WHERE id = $1', [id]);
+        res.json({ message: "Post deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete('/api/posts', authMiddleware, async (req, res) => {
+    try {
+        await pool.query('DELETE FROM posts');
+        res.json({ message: "All posts deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });

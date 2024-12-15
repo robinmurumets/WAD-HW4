@@ -19,15 +19,6 @@ const execute = async (query) => {
     }
 };
 
-
-const createPostsTable = `
-    CREATE TABLE IF NOT EXISTS posts (
-        id SERIAL PRIMARY KEY,
-        body TEXT NOT NULL,
-        created_at TIMESTAMP NOT NULL DEFAULT NOW()
-    );
-`;
-
 const createUsersTable = `
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -36,14 +27,25 @@ const createUsersTable = `
     );
 `;
 
-execute(createPostsTable).then(result => {
-  if (result) {
-      console.log('Table "posts" is created');
-  }
-});
+const createPostsTable = `
+    CREATE TABLE IF NOT EXISTS posts (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        body TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+`;
 
 execute(createUsersTable).then(result => {
     if (result) {
         console.log('Table "users" is created');
     }
-  });
+});
+
+execute(createPostsTable).then(result => {
+    if (result) {
+        console.log('Table "posts" is created');
+    }
+});
+
+module.exports = pool;

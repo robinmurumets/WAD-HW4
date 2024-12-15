@@ -1,50 +1,87 @@
 <template>
-    <div>
-      <Header />
-      <section class="feed">
-        <div class="controls">
-          <button @click="resetLikes">Reset All Likes</button>
-        </div>
-        <div v-for="post in posts" :key="post.id" class="post">
-          <UserPost :post="post" @like="likePost" />
-        </div>
-      </section>
-      <Footer />
-    </div>
-  </template>
-  
-  <script>
-  import Header from '../components/Header.vue';
-  import Footer from '../components/Footer.vue';
-  import UserPost from '../components/UserPost.vue';
-  
-  export default {
-    name: 'MainView',
-    components: { Header, Footer, UserPost },
-    data() {
-      return {
-        posts: [],
-      };
+  <div>
+    <Header />
+    <section class="feed">
+      <div class="controls">
+        <button @click="deleteAllPosts">Delete All Posts</button>
+      </div>
+      <div v-for="post in posts" :key="post.id">
+        <UserPost 
+          :post="post" 
+          @like="likePost(post.id)"
+        />
+      </div>
+    </section>
+    <Footer />
+  </div>
+</template>
+
+<script>
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
+import UserPost from '../components/UserPost.vue';
+
+export default {
+  name: 'MainView',
+  components: { 
+    Header, 
+    Footer,
+    UserPost 
+  },
+  data() {
+    return {
+      posts: []
+    };
+  },
+  methods: {
+    async fetchPosts() {
+      try {
+        const response = await fetch('http://localhost:3000/api/posts', {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          this.posts = data.map(post => ({
+            ...post,
+            likes: 0,
+            profileImage: '/res/images/Default_Profile.png',
+            date: this.formatDate(post.created_at)
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
     },
-    methods: {
-      fetchPosts() {
-        this.posts = this.$store.state.posts;
-      },
-      resetLikes() {
-        this.$store.dispatch('resetLikes');
-        this.fetchPosts();
-      },
-      likePost(postId) {
-        
-        this.$store.dispatch('likePost', postId);
-        this.fetchPosts();
-      },
+    formatDate(date) {
+      return new Date(date).toLocaleString();
     },
-    created() {
-      this.fetchPosts();
+    likePost(postId) {
+      const post = this.posts.find(p => p.id === postId);
+      if (post) {
+        post.likes = (post.likes || 0) + 1;
+      }
     },
-  };
-  </script>
+    async deleteAllPosts() {
+      if (confirm('Are you sure you want to delete all posts?')) {
+        try {
+          const response = await fetch('http://localhost:3000/api/posts', {
+            method: 'DELETE',
+            credentials: 'include'
+          });
+          if (response.ok) {
+            this.posts = [];
+          }
+        } catch (error) {
+          console.error('Error deleting all posts:', error);
+        }
+      }
+    }
+  },
+  created() {
+    this.fetchPosts();
+  }
+};
+</script>
   
 
 <style>
@@ -67,14 +104,23 @@
 }
 
 .controls button:hover {
-  background-color: #45a049; 
+  background-color: #a82f2f; 
   transform: scale(1.05); 
 }
 
 .controls button:active {
-  background-color: #388E3C; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
   transform: scale(1); 
+}
+
+.post:hover {
+  transform: scale(1.05);
+}
+
+.like-button {
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 </style>

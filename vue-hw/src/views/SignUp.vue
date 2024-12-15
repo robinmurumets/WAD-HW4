@@ -1,10 +1,10 @@
 <template>
-  <div class="page-container" >
+  <div class="page-container">
     <Header />
     <div class="signup-container">
       <div class="signup-form-wrapper">
         <h2>Create an Account</h2>
-        <form @submit.prevent="handleSubmit"> <!-- function that handles submit-->
+        <form @submit.prevent="handleSubmit">
           <div class="form-group">
             <p>Email</p>
             <input v-model="formData.email" type="email" required placeholder="Email">
@@ -16,141 +16,150 @@
         </form>
       </div>
     </div>
-
     <Footer />
   </div>
-    
-  </template>
+</template>
 
-  <script>
+<script>
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
 
-  import Header from '../components/Header.vue';
-  import Footer from '../components/Footer.vue';
-  import UserPost from '../components/UserPost.vue';
-  export default {
-
-    name: 'SignUp',
-    components: { Header, Footer },
-    data() {
-      return {
-        formData: {
-          email: '',
-          password: ''
-        },
-        invalidMessage: "",
-      }
-    },
-    methods: {
-      validatePassword(password) {
-        const conditions = [];
-        conditions.push("The password is not valid")
-        if (password.length < 8 || password.length >= 15) {
-          conditions.push("- password must be 8 to 15 characters long");
-        }
-        if (!/[A-Z]/.test(password)) {
-          conditions.push("- password must include at least one uppercase alphabet character");
-        }
-        if ((password.match(/[a-z]/g) || []).length < 2) {
-          conditions.push("- password must include at least two lowercase alphabet characters");
-        }
-        if (!/[0-9]/.test(password)) {
-          conditions.push("- password must include at least one numeric value");
-        }
-        if (!/^[A-Z]/.test(password)) {
-          conditions.push("- password must start with an uppercase alphabet");
-        }
-        if (!/_/.test(password)) {
-          conditions.push("- password must the character “_”");
-        }
-        return conditions;
+export default {
+  name: 'SignUp',
+  components: { Header, Footer },
+  data() {
+    return {
+      formData: {
+        email: '',
+        password: ''
       },
+      invalidMessage: "",
+    }
+  },
+  methods: {
+    validatePassword(password) {
+      const conditions = [];
+      conditions.push("The password is not valid")
+      if (password.length < 8 || password.length >= 15) {
+        conditions.push("- password must be 8 to 15 characters long");
+      }
+      if (!/[A-Z]/.test(password)) {
+        conditions.push("- password must include at least one uppercase alphabet character");
+      }
+      if ((password.match(/[a-z]/g) || []).length < 2) {
+        conditions.push("- password must include at least two lowercase alphabet characters");
+      }
+      if (!/[0-9]/.test(password)) {
+        conditions.push("- password must include at least one numeric value");
+      }
+      if (!/^[A-Z]/.test(password)) {
+        conditions.push("- password must start with an uppercase alphabet");
+      }
+      if (!/_/.test(password)) {
+        conditions.push("- password must include the character “_”");
+      }
+      return conditions;
+    },
 
-      handleSubmit() {
-        const unmetConditions = this.validatePassword(this.formData.password)
-        if (unmetConditions.length > 1) {
-          this.invalidMessage = unmetConditions.join(" ");
-        } else {
-          this.$store.dispatch('signupUser', this.formData);
-          this.$router.push('/');
+    async handleSubmit() {
+      const unmetConditions = this.validatePassword(this.formData.password)
+      if (unmetConditions.length > 1) {
+        this.invalidMessage = unmetConditions.join(" ");
+      } else {
+        try {
+          const response = await fetch('http://localhost:3000/auth/signup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.formData),
+            credentials: 'include'
+          });
+          if (response.ok) {
+            this.$router.push('/');
+          } else {
+            const errorData = await response.json();
+            this.invalidMessage = errorData.error || 'Signup failed';
+          }
+        } catch (error) {
+          console.error('Error during signup:', error);
+          this.invalidMessage = 'Signup failed';
         }
       }
     }
   }
-  </script>
+}
+</script>
 
-  <style scoped>
-
-  
-
+<style scoped>
 .page-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-  .signup-container {
+.signup-container {
   flex: 1;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   padding: 2rem;
   background: black;
-    
-  }
+}
 
-  .signup-form-wrapper {
-    max-width: 500px;
+.signup-form-wrapper {
+  max-width: 500px;
   width: 100%;
   margin: 0 auto;
   background: white;
   padding: 2rem;
   border-radius: 8px;
-  }
+}
 
-  h2 {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
+h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 
-  .form-group {
-    margin-bottom: 1rem;
-  }
+.form-group {
+  margin-bottom: 1rem;
+}
 
-  p {
-    display: block;
-    margin-bottom: 0.5rem;
-    color:darkslategray;
-  }
+p {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: darkslategray;
+}
 
-  input {
-    width: 100%;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-  }
+input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
 
-  button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
 
-  button:hover {
-    background-color: #357abd;
-  }
+button:hover {
+  background-color: #357abd;
+}
 
-  footer {
+footer {
   background-color: #1d1d1d;
   color: white;
   text-align: center;
   padding: 10px;
   width: 100%;
 }
-  </style>
+</style>
