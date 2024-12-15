@@ -1,15 +1,21 @@
 <template>
-  <div class="post">
+  <div class="post" @click="viewPost">
     <div class="post-header">
       <img :src="post.profileImage" alt="Profile" width="50" height="50" />
-      <div>
-        <p><strong>{{ post.author }}</strong> {{ post.username }}</p>
+    
+      <div class="post-info">
+        <div class="author">
+          <p>{{ post.author }}</p>
+          <p>{{ post.username }}</p>
+        </div>
         <p class="post-date">{{ post.date }}</p>
       </div>
     </div>
-    <p class="post-text">{{ post.text }}</p>
-    <img v-if="post.postImage" :src="post.postImage" alt="Post Image" class="post-image"/>
-    <button @click="handleLike" class="like-button">❤️ <span>{{ post.likes }}</span></button>
+
+    <p class="post-text">{{ post.body }}</p>
+    <button @click.stop="handleLike" class="like-button">
+      ❤️ <span>{{ post.likes }}</span>
+    </button>
   </div>
 </template>
 
@@ -18,6 +24,9 @@ export default {
   name: 'UserPost',
   props: ['post'],
   methods: {
+    viewPost() {
+      this.$router.push(`/post/${this.post.id}`);
+    },
     handleLike() {
       this.$emit('like', this.post.id);
     },
@@ -27,6 +36,22 @@ export default {
 
 
 <style>
+.like-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  color: white;
+  padding: 5px 10px;
+  transition: transform 0.2s;
+}
+
+.like-button:hover {
+  transform: scale(1.1);
+}
+
 .like-button span {
   color: white;
-}</style>
+  margin-left: 5px;
+}
+</style>

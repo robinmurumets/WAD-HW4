@@ -103,6 +103,7 @@ nav > div { /* usage of child selector */
 .post-header {
     display: flex;
     align-items: center;
+    
 }
 
 .post-header p {
@@ -113,6 +114,7 @@ nav > div { /* usage of child selector */
     border-radius: 50%;
     margin-right: 5px;
     margin-left: 5px;
+    
 }
 
 .post-date {
