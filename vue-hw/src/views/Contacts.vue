@@ -3,6 +3,9 @@
         <Header />
         <main>
             <h1>MEIST</h1>
+            <p>This is out homework number 4</p>
+            <br>
+            <p>Contact us using the following links</p>
         </main>
         <Footer />
     </div>
@@ -22,4 +25,9 @@ export default {
 
 <style scoped>
 /* Add your styles here */
+main {
+    margin: 0;
+    padding: 0;
+
+}
 </style>
